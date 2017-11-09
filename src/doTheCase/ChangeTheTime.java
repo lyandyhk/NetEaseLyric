@@ -42,15 +42,17 @@ public class ChangeTheTime {
 			minflag = 1;
 			char flag = min.charAt(0);
 			if(flag == '+'){
-				min = min.substring(1);
 				minflag = 1;
+				min = min.substring(1);
 			}
 			else if(flag == '-'){
-				min = min.substring(1);
 				minflag = -1;
+				min = min.substring(1);
 			}
 			try{
-				minInt = Integer.valueOf(min);				
+				minInt = Integer.valueOf(min);	
+				if(minInt<0)
+					throw new NumberFormatException();
 			}catch(NumberFormatException e){
 				System.out.println("分钟参数输入有误");
 				System.exit(0);
@@ -60,15 +62,17 @@ public class ChangeTheTime {
 			secflag = 1;
 			char flag = sec.charAt(0);
 			if(flag == '+'){
-				sec = sec.substring(1);
 				secflag = 1;
+				sec = sec.substring(1);
 			}
 			else if(flag == '-'){
-				sec = sec.substring(1);
 				secflag = -1;
+				sec = sec.substring(1);
 			}
 			try{
-				secInt = Integer.valueOf(sec);				
+				secInt = Integer.valueOf(sec);	
+				if(secInt<-60||secInt>60)
+					throw new NumberFormatException();
 			}catch(NumberFormatException e){
 				System.out.println("秒钟参数输入有误");
 				System.exit(0);
@@ -78,15 +82,17 @@ public class ChangeTheTime {
 			msecflag = 1;
 			char flag = msec.charAt(0);
 			if(flag == '+'){
-				msec = msec.substring(1);
 				msecflag = 1;
+				msec = msec.substring(1);
 			}
 			else if(flag == '-'){
-				msec = msec.substring(1);
 				msecflag = -1;
+				msec = msec.substring(1);
 			}
 			try{
-				msecInt = Integer.valueOf(msec);				
+				msecInt = Integer.valueOf(msec);
+				if(msecInt<-100||msecInt>100)
+					throw new NumberFormatException();
 			}catch(NumberFormatException e){
 				System.out.println("毫秒参数输入有误");
 				System.exit(0);
@@ -95,8 +101,8 @@ public class ChangeTheTime {
 		BufferedReader br = null;
 		BufferedWriter bw = null;
 		try {
-			System.out.println(pro.getProperty("savePath")+File.separator+pro.getProperty("songName")+".lrc");
-			System.out.println(pro.getProperty("ChangeSavePath")+File.separator+pro.getProperty("songName")+".lrc");
+			System.out.println("读入的文件："+pro.getProperty("savePath")+File.separator+pro.getProperty("songName")+".lrc");
+			System.out.println("输出的文件："+pro.getProperty("ChangeSavePath")+File.separator+pro.getProperty("songName")+".lrc");
 			br = new BufferedReader(new FileReader(pro.getProperty("savePath")+File.separator+pro.getProperty("songName")+".lrc"));
 			bw = new BufferedWriter(new FileWriter(pro.getProperty("ChangeSavePath")+File.separator+pro.getProperty("songName")+".lrc"));
 		} catch (IOException e) {
@@ -114,7 +120,6 @@ public class ChangeTheTime {
 			    if(m.find()){
 			    	int start = m.start();
 			    	int end = m.end();
-			    	String sub = line.substring(start, end);
 			    	String txtMin = line.substring(1, 3);
 			    	String txtSec = line.substring(4, 6);
 			    	String txtMsec = line.substring(7, 9);
@@ -123,10 +128,10 @@ public class ChangeTheTime {
 			    	if(minflag !=0){
 			    		int  result;
 			    		if(minflag == 1){
-			    			result = Integer.valueOf(txtMin)+Integer.valueOf(min);
+			    			result = Integer.valueOf(txtMin)+minInt;
 			    		}
 			    		else{
-			    			result = Integer.valueOf(txtMin)-Integer.valueOf(min);
+			    			result = Integer.valueOf(txtMin)-minInt;
 			    			
 			    		}
 			    		singleChange(sb, 0, result);
@@ -135,10 +140,10 @@ public class ChangeTheTime {
 			    	if(secflag !=0){
 			    		int  result;
 			    		if(secflag == 1){
-			    			result = Integer.valueOf(txtSec)+Integer.valueOf(sec);
+			    			result = Integer.valueOf(txtSec)+secInt;
 			    		}
 			    		else{
-			    			result = Integer.valueOf(txtSec)-Integer.valueOf(sec);
+			    			result = Integer.valueOf(txtSec)-secInt;
 			    		}
 			    		singleChange(sb, 1, result);		    			
 			    	}
@@ -146,10 +151,10 @@ public class ChangeTheTime {
 			    	if(msecflag !=0){
 			    		int  result;
 			    		if(msecflag == 1){
-			    			result = Integer.valueOf(txtMsec)+Integer.valueOf(msec);
+			    			result = Integer.valueOf(txtMsec)+msecInt;
 			    		}
 			    		else{
-			    			result = Integer.valueOf(txtMsec)-Integer.valueOf(msec);
+			    			result = Integer.valueOf(txtMsec)-msecInt;
 			    		}
 			    		singleChange(sb, 2, result);	
 			    	}
