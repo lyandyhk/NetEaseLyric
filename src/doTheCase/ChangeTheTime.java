@@ -121,45 +121,37 @@ public class ChangeTheTime {
 //			    	System.out.println(txtMin+":"+txtSec+":"+txtMsec);
 			    	// 分钟处理
 			    	if(minflag !=0){
-			    		String lastMin;
+			    		int  result;
 			    		if(minflag == 1){
-			    			lastMin = String.valueOf(Integer.valueOf(txtMin)+Integer.valueOf(min));
+			    			result = Integer.valueOf(txtMin)+Integer.valueOf(min);
 			    		}
 			    		else{
-			    			lastMin = String.valueOf(Integer.valueOf(txtMin)-Integer.valueOf(min));
-			    		}
-			    		if(lastMin.length() == 1)
-			    			lastMin = "0"+lastMin;
-			    		sb.replace(1, 3, lastMin);
+			    			result = Integer.valueOf(txtMin)-Integer.valueOf(min);
 			    			
+			    		}
+			    		singleChange(sb, 0, result);
 			    	}
 			    	// 秒针处理
 			    	if(secflag !=0){
-			    		String lastSec;
+			    		int  result;
 			    		if(secflag == 1){
-			    			lastSec = String.valueOf(Integer.valueOf(txtSec)+Integer.valueOf(sec));
+			    			result = Integer.valueOf(txtSec)+Integer.valueOf(sec);
 			    		}
 			    		else{
-			    			lastSec = String.valueOf(Integer.valueOf(txtSec)-Integer.valueOf(sec));
+			    			result = Integer.valueOf(txtSec)-Integer.valueOf(sec);
 			    		}
-			    		if(lastSec.length() == 1)
-			    			lastSec = "0"+lastSec;
-			    		sb.replace(4, 6, lastSec);
-			    			
+			    		singleChange(sb, 1, result);		    			
 			    	}
 			    	// 毫秒处理
 			    	if(msecflag !=0){
-			    		String lastMsec;
+			    		int  result;
 			    		if(msecflag == 1){
-			    			lastMsec = String.valueOf(Integer.valueOf(txtMsec)+Integer.valueOf(msec));
+			    			result = Integer.valueOf(txtMsec)+Integer.valueOf(msec);
 			    		}
 			    		else{
-			    			lastMsec = String.valueOf(Integer.valueOf(txtMsec)-Integer.valueOf(msec));
+			    			result = Integer.valueOf(txtMsec)-Integer.valueOf(msec);
 			    		}
-			    		if(lastMsec.length() == 1)
-			    			lastMsec = "0"+lastMsec;
-			    		sb.replace(7, 9, lastMsec);
-			    			
+			    		singleChange(sb, 2, result);	
 			    	}
 //			    	System.out.println(sb.toString());
 			    }
@@ -172,6 +164,66 @@ public class ChangeTheTime {
 			
 		}
 			
+	}
+	public static StringBuilder singleChange(StringBuilder sb,int type,int result){
+		switch (type) {
+			case 0:{
+				if(result<0)
+					throw new RuntimeException("分钟在处理后变成了负数，请检查参数");
+				String lastMin = String.valueOf(result);
+				if(lastMin.length() == 1)
+					lastMin = "0"+lastMin;
+				sb.replace(1, 3, lastMin);
+				return sb;
+			}
+			case 1:{
+				String lastSec = null;
+				if(result<0){
+					//向分钟借1
+					System.out.println(sb.toString());
+					System.out.println(result);
+					String temp = sb.substring(1, 3);
+					int tempInt = Integer.valueOf(temp)-1;
+					singleChange(sb,0,tempInt);
+					result = result + 60;
+				}else if(result>60){
+					//向分钟送1
+					String temp = sb.substring(1, 3);
+					int tempInt = Integer.valueOf(temp)+1;
+					singleChange(sb,0,tempInt);
+					result = result - 60;
+				}
+				lastSec = String.valueOf(result);
+				if(lastSec.length() == 1)
+					lastSec = "0"+lastSec;
+				sb.replace(4, 6, lastSec);
+				return sb;
+			}
+			case 2:{
+				String lastMsec = null;
+				if(result<0){
+					//向秒钟借1
+					String temp = sb.substring(4, 6);
+					int tempInt = Integer.valueOf(temp)-1;
+					singleChange(sb,1,tempInt);
+					result = result + 100;
+				}else if(result>100){
+					//向秒钟送1
+					String temp = sb.substring(4, 6);
+					int tempInt = Integer.valueOf(temp)+1;
+					singleChange(sb,1,tempInt);
+					result = result - 100;
+				}
+				lastMsec = String.valueOf(result);
+				if(lastMsec.length() == 1)
+					lastMsec = "0"+lastMsec;
+				sb.replace(7, 9, lastMsec);
+				return sb;
+			}
+			default:{
+				return sb;
+			}
+		}
 	}
 	public static void main(String[] args) {
 		doTheChange();
